@@ -19,5 +19,18 @@ language plpgsql AS
 select * from sp_get_movies_higher_than(90)
 
 
-
+drop function sp_get_movies_from_country;
+create or replace function sp_get_movies_from_country(_countryname text)
+returns TABLE(name text, release_date bigint)
+language plpgsql AS
+	$$
+		begin 
+		return QUERY
+		select mv.name as name, mv.year as release_date 
+		from movies mv join countries co on  mv.country_id = co.id
+		where co.name like _countryname;
+		end;
+	$$;
+	
+select * from sp_get_movies_from_country('France')
 
