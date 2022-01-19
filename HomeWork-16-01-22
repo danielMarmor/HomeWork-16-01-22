@@ -1,0 +1,23 @@
+drop  function sp_get_movies_higher_than;
+create or replace function 
+sp_get_movies_higher_than(_min_price double precision)
+returns TABLE(id bigint, name text, price double precision, year bigint)
+language plpgsql AS
+	$$
+		begin 
+			return QUERY
+			select mv.id as id,
+			mv.name as name,
+			mv.price as price,
+			mv.year as year
+			from movies mv
+			where mv.price >= _min_price
+			order by mv.price;
+		end;
+	$$;
+	
+select * from sp_get_movies_higher_than(90)
+
+
+
+
